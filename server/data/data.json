@@ -1,0 +1,12 @@
+{
+    "sales": [
+      { "month": "Jan", "value": 1200 },
+      { "month": "Feb", "value": 1500 },
+      { "month": "Mar", "value": 1800 }
+    ],
+    "users": [
+      { "month": "Jan", "value": 300 },
+      { "month": "Feb", "value": 350 },
+      { "month": "Mar", "value": 400 }
+    ]
+  }

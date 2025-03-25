@@ -1,0 +1,6 @@
+# Ignore sensitive config and data files
+server/config/emailConfig.json
+server/data/users.json
+
+# Ignore node_modules
+node_modules/
