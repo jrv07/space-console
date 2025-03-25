@@ -4,3 +4,7 @@ server/data/users.json
 
 # Ignore node_modules
 node_modules/
+
+# Ignore 
+client/.gitignore
+client/node_modules
