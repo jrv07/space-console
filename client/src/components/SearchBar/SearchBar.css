@@ -1,0 +1,36 @@
+.search-bar {
+  width: 100%;
+  max-width: 400px; /* Default width */
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: max-width 0.3s ease; /* Smooth width transition */
+}
+
+/* Double width when input is focused */
+.search-bar:focus-within {
+  max-width: 1000px; /* Double the default 400px */
+}
+
+.search-bar input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.search-bar button {
+  padding: 4px 12px;
+  background: #8884d8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background: #6664b6;
+}

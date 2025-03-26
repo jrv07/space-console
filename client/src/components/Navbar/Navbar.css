@@ -1,0 +1,70 @@
+.navbar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 180px;
+  height: 100vh;
+  background: #f5f5f5;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  z-index: 30;
+  transition: width 0.3s ease;
+}
+
+.navbar.collapsed {
+  width: 60px;
+  padding: 20px 10px;
+}
+
+.navbar-header {
+  text-align: center;
+}
+
+.navbar-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.navbar-header .navbar-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.navbar nav {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.navbar a {
+  padding: 10px;
+  color: #8884d8;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 5px 0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Text aligns left when uncollapsed */
+}
+
+.navbar.collapsed a {
+  justify-content: center; /* Icons center when collapsed */
+  padding: 10px 0;
+}
+
+.navbar a .icon {
+  width: 20px;
+  height: 20px;
+}
+
+.navbar a:hover {
+  background: #e0e0e0;
+}
+
+.navbar a.active {
+  background: #8884d8;
+  color: #fff;
+}

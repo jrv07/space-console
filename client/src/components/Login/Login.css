@@ -1,0 +1,56 @@
+.login-container {
+  width: 300px; /* Reduced from max-width: 400px for a tighter fit */
+  margin: 0 auto; /* Center horizontally, remove large top margin */
+  position: absolute; /* Center vertically with top/left */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* True centering */
+  padding: 15px; /* Reduced from 20px */
+  background: #fff;
+  border-radius: 6px; /* Slightly smaller radius */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  text-align: center;
+  box-sizing: border-box; /* Ensure padding fits within width */
+}
+
+.login-container h2 {
+  margin-bottom: 15px; /* Reduced from 20px */
+  font-size: 20px; /* Slightly smaller for compactness */
+}
+
+.login-container input {
+  width: 100%;
+  padding: 8px; /* Reduced from 10px */
+  margin: 8px 0; /* Reduced from 10px */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px; /* Smaller text for tighter fit */
+}
+
+.login-container button {
+  padding: 8px 16px; /* Reduced from 10px 20px */
+  background: #8884d8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%; /* Full width for consistency */
+  font-size: 14px;
+}
+
+.login-container button:hover {
+  background: #6664b6;
+}
+
+.login-container .error {
+  color: red;
+  margin-top: 8px; /* Reduced from 10px */
+  font-size: 12px; /* Smaller error text */
+}
+
+.login-container a {
+  color: #8884d8;
+  text-decoration: none;
+  font-size: 12px; /* Smaller link text */
+}
