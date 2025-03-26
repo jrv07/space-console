@@ -1,0 +1,15 @@
+.visualization {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px; /* Limit width */
+  width: 100%; /* Full width up to max */
+  text-align: center;
+  box-sizing: border-box;
+  margin: 0 auto; /* Center horizontally */
+}
+
+.visualization h2 {
+  margin-bottom: 20px;
+}
