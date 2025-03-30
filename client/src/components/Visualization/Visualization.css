@@ -7,7 +7,7 @@
   width: 100%; /* Full width up to max */
   text-align: center;
   box-sizing: border-box;
-  margin: 0 auto; /* Center horizontally */
+  margin: 20px auto; /* Center horizontally */
 }
 
 .visualization h2 {

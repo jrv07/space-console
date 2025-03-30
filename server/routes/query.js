@@ -16,17 +16,32 @@ const getData = () => {
 router.post('/query', (req, res) => {
   const { query } = req.body;
   const data = getData();
-  let result = {};
+  const queryParts = query.toLowerCase()
+    .split(/and|,/) // Split by "and" or commas
+    .map(part => part.trim())
+    .filter(part => part); // Remove empty parts
 
-  if (query.toLowerCase().includes('sales')) {
-    result = { type: 'bar', data: data.sales, title: 'Sales Data' };
-  } else if (query.toLowerCase().includes('users')) {
-    result = { type: 'line', data: data.users, title: 'User Growth' };
+  const results = [];
+
+  queryParts.forEach(q => {
+    if (q.includes('sales')) {
+      results.push({ type: 'bar', data: data.sales, title: 'Monthly Sales Data' });
+    } else if (q.includes('users')) {
+      results.push({ type: 'line', data: data.users, title: 'User Growth Over Time' });
+    } else if (q.includes('products')) {
+      results.push({ type: 'pie', data: data.products, title: 'Product Category Distribution' });
+    } else if (q.includes('engagement')) {
+      results.push({ type: 'scatter', data: data.engagement, title: 'User Engagement (Likes vs Comments)' });
+    } else if (q.includes('performance')) {
+      results.push({ type: 'composed', data: data.performance, title: 'Revenue and Cost Performance' });
+    }
+  });
+
+  if (results.length > 0) {
+    res.json(results); // Return array of results
   } else {
-    result = { error: 'Query not recognized' };
+    res.json({ error: 'No recognized queries found' });
   }
-
-  res.json(result);
 });
 
 module.exports = router;

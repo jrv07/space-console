@@ -1,11 +1,15 @@
 .search-page {
-  margin-left: 60px; /* Offset for navbar */
+  margin-left: 60px; /* Offset for collapsed navbar */
   padding: 20px;
   min-height: 100vh;
   background: #fafafa;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  transition: margin-left 0.3s ease; /* Smooth navbar collapse */
+}
+
+.search-page.navbar-expanded {
+  margin-left: 220px; /* Offset for expanded navbar */
 }
 
 .search-content {
@@ -13,9 +17,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Stack charts from top */
+  padding-top: 60px; /* Offset for fixed header */
+  gap: 20px; /* Space between charts */
 }
 
 .search-content p {
   text-align: center;
+  margin: 10px 0;
 }
