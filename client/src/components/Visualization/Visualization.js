@@ -3,16 +3,40 @@ import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, XAxis, YAxis, Tooltip, CartesianGrid,
   ScatterChart, Scatter, ComposedChart, Area, Cell
 } from 'recharts';
+import { useDispatch, useSelector } from 'react-redux';
+import { pinChart, unpinChart } from '../../redux/store';
+import { FaThumbtack } from 'react-icons/fa'; // Pin icon
 import './Visualization.css';
 
 const Visualization = ({ data, type, title }) => {
+  const dispatch = useDispatch();
+  const pinnedCharts = useSelector(state => state.data.pinnedCharts);
+  const isPinned = pinnedCharts.some(chart => chart.title === title);
+
   if (!data) return null;
 
-  const COLORS = ['#8884d8', '#82ca9d', '#ff7300', '#ffbb28', '#ff8042']; // For pie chart
+  const COLORS = ['#8884d8', '#82ca9d', '#ff7300', '#ffbb28', '#ff8042'];
+
+  const handlePinToggle = () => {
+    if (isPinned) {
+      dispatch(unpinChart(title));
+    } else {
+      dispatch(pinChart({ data, type, title }));
+    }
+  };
 
   return (
     <div className="visualization">
-      <h2>{title}</h2>
+      <div className="visualization-header">
+        <h2>{title}</h2>
+        <button
+          className={`pin-btn ${isPinned ? 'pinned' : ''}`}
+          onClick={handlePinToggle}
+          title={isPinned ? 'Unpin Chart' : 'Pin Chart'}
+        >
+          <FaThumbtack />
+        </button>
+      </div>
       {type === 'bar' && (
         <BarChart width={600} height={300} data={data}>
           <CartesianGrid strokeDasharray="3 3" />

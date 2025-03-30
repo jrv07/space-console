@@ -3,13 +3,38 @@
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  max-width: 800px; /* Limit width */
-  width: 100%; /* Full width up to max */
+  max-width: 800px;
+  width: 100%;
   text-align: center;
   box-sizing: border-box;
-  margin: 20px auto; /* Center horizontally */
+  margin: 20px auto;
+}
+
+.visualization-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .visualization h2 {
-  margin-bottom: 20px;
+  margin: 0;
+  font-size: 20px;
+}
+
+.pin-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #8884d8;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.pin-btn.pinned {
+  color: #ff7300; /* Orange when pinned */
+}
+
+.pin-btn:hover {
+  color: #6664b6;
 }
