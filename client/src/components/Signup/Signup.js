@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Signup.css';
 import { useNavigate } from 'react-router-dom';
+import './Signup.css';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -11,7 +11,8 @@ const Signup = () => {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [step, setStep] = useState(1); // 1: Signup form, 2: OTP verification
+  const [step, setStep] = useState(1);
+  const [hashedPassword, setHashedPassword] = useState(''); // Store hashed password
   const navigate = useNavigate();
 
   const handleSignup = async () => {
@@ -26,9 +27,10 @@ const Signup = () => {
         password,
       });
       if (response.data.success) {
+        setHashedPassword(response.data.hashedPassword);
         setSuccess(response.data.message);
         setError('');
-        setStep(2); // Move to OTP verification
+        setStep(2);
       } else {
         setError(response.data.message);
       }
@@ -42,7 +44,7 @@ const Signup = () => {
       const response = await axios.post('http://localhost:5000/api/verify-otp', {
         username,
         email,
-        password,
+        hashedPassword,
         otp,
       });
       if (response.data.success) {

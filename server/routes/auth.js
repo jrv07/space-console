@@ -1,119 +1,126 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
+const argon2 = require('argon2');
 const nodemailer = require('nodemailer');
+const pool = require('../db');
 const router = express.Router();
 
-// Import Gmail credentials
-const emailConfig = require('../config/emailConfig.json');
-const { emailUser, emailPass } = emailConfig;
+// Email config from .env
+const { EMAIL_USER, EMAIL_PASS } = process.env;
 
-// Path to users.json
-const usersFilePath = path.join(__dirname, '../data/users.json');
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASS,
+  },
+});
 
 // In-memory OTP storage (key: email, value: { otp, timestamp })
 const otpStore = {};
 
-// Email transporter setup (using Gmail)
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: emailUser,
-    pass: emailPass,
-  },
-});
-
-// Helper to read users
-const getUsers = () => {
-  const data = fs.readFileSync(usersFilePath, 'utf8');
-  return JSON.parse(data);
-};
-
-// Helper to write users
-const saveUsers = (users) => {
-  fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
-};
-
 // Generate 6-digit OTP
-const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
+const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 // Send OTP email
 const sendOTPEmail = async (email, otp) => {
   const mailOptions = {
-    from: emailUser,
+    from: EMAIL_USER,
     to: email,
-    subject: 'Space Console - Verify Your Email',
+    subject: 'Space Console - Verify Your Action',
     text: `Your one-time password (OTP) is: ${otp}. It expires in 5 minutes.`,
   };
-
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log(`OTP sent to ${email}: ${otp}`);
-  } catch (error) {
-    console.error('Error sending email:', error);
-    throw new Error('Failed to send OTP');
-  }
+  await transporter.sendMail(mailOptions);
 };
 
-// Login route
-router.post('/login', (req, res) => {
+// Login route (Step 1: Request OTP)
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const users = getUsers();
-  const user = users.find((u) => u.username === username && u.password === password);
-  if (user) {
-    res.json({ success: true, token: 'mock-token', username });
-  } else {
-    res.status(401).json({ success: false, message: 'Invalid credentials' });
-  }
-});
-
-// Signup route (Step 1: Request OTP)
-router.post('/signup', async (req, res) => {
-  const { username, email, password } = req.body;
-  const users = getUsers();
-
-  if (users.find((u) => u.username === username)) {
-    return res.status(400).json({ success: false, message: 'Username already exists' });
-  }
-  if (users.find((u) => u.email === email)) {
-    return res.status(400).json({ success: false, message: 'Email already exists' });
-  }
-
-  const otp = generateOTP();
-  otpStore[email] = { otp, timestamp: Date.now() };
-
   try {
-    await sendOTPEmail(email, otp);
-    res.json({ success: true, message: 'OTP sent to your email' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to send OTP' });
+    const [users] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+    const user = users[0];
+    if (!user || !(await argon2.verify(user.password, password))) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    const otp = generateOTP();
+    otpStore[user.email] = { otp, timestamp: Date.now() };
+    await sendOTPEmail(user.email, otp);
+    res.json({ success: true, message: 'OTP sent to your email', email: user.email });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Login failed' });
   }
 });
 
-// Verify OTP and complete signup
-router.post('/verify-otp', (req, res) => {
-  const { username, email, password, otp } = req.body;
+// Login OTP verification (Step 2)
+router.post('/verify-login-otp', async (req, res) => {
+  const { email, otp } = req.body;
   const storedOtpData = otpStore[email];
-
   if (!storedOtpData) {
-    return res.status(400).json({ success: false, message: 'No OTP found for this email' });
+    return res.status(400).json({ success: false, message: 'No OTP found' });
   }
 
   const { otp: storedOtp, timestamp } = storedOtpData;
-  const fiveMinutes = 5 * 60 * 1000; // 5 minutes in milliseconds
-
+  const fiveMinutes = 5 * 60 * 1000;
   if (Date.now() - timestamp > fiveMinutes) {
     delete otpStore[email];
     return res.status(400).json({ success: false, message: 'OTP expired' });
   }
 
   if (storedOtp === otp) {
-    const users = getUsers();
-    users.push({ username, email, password });
-    saveUsers(users);
-    delete otpStore[email]; // Clear OTP after use
+    delete otpStore[email];
+    const [users] = await pool.query('SELECT username FROM users WHERE email = ?', [email]);
+    const user = users[0];
+    res.json({ success: true, token: 'mock-token-' + Date.now(), username: user.username });
+  } else {
+    res.status(400).json({ success: false, message: 'Invalid OTP' });
+  }
+});
+
+// Signup route (Step 1: Request OTP)
+router.post('/signup', async (req, res) => {
+  const { username, email, password } = req.body;
+  try {
+    const [existingUsers] = await pool.query(
+      'SELECT * FROM users WHERE username = ? OR email = ?',
+      [username, email]
+    );
+    if (existingUsers.length > 0) {
+      return res.status(400).json({ success: false, message: 'Username or email already exists' });
+    }
+
+    const hashedPassword = await argon2.hash(password);
+    const otp = generateOTP();
+    otpStore[email] = { otp, timestamp: Date.now() };
+    await sendOTPEmail(email, otp);
+    res.json({ success: true, message: 'OTP sent to your email', username, email, hashedPassword });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Failed to send OTP' });
+  }
+});
+
+// Verify OTP and complete signup (Step 2)
+router.post('/verify-otp', async (req, res) => {
+  const { username, email, hashedPassword, otp } = req.body;
+  const storedOtpData = otpStore[email];
+  if (!storedOtpData) {
+    return res.status(400).json({ success: false, message: 'No OTP found' });
+  }
+
+  const { otp: storedOtp, timestamp } = storedOtpData;
+  const fiveMinutes = 5 * 60 * 1000;
+  if (Date.now() - timestamp > fiveMinutes) {
+    delete otpStore[email];
+    return res.status(400).json({ success: false, message: 'OTP expired' });
+  }
+
+  if (storedOtp === otp) {
+    await pool.query(
+      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+      [username, email, hashedPassword]
+    );
+    delete otpStore[email];
     res.json({ success: true, message: 'Signup successful' });
   } else {
     res.status(400).json({ success: false, message: 'Invalid OTP' });
