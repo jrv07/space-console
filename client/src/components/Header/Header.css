@@ -17,29 +17,6 @@
   position: relative;
 }
 
-.burger-btn {
-  position: absolute;
-  left: 220px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #333;
-  cursor: pointer;
-  padding: 0 10px;
-  z-index: 40;
-  transition: left 0.3s ease;
-}
-
-.burger-btn.collapsed {
-  left: 80px;
-}
-
-.burger-btn:hover {
-  color: #8884d8;
-}
-
 .search-bar-container {
   flex-grow: 1;
   display: flex;

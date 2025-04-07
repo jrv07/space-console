@@ -6,9 +6,9 @@ space-console/
 ├── client/             # React front-end
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Header/
-│   │   │   │   ├── Header.js
-│   │   │   │   └── Header.css
+│   │   │   ├── Profile/
+│   │   │   │   ├── Profile.js
+│   │   │   │   └── Profile.css
 │   │   │   ├── Footer/
 │   │   │   │   ├── Footer.js
 │   │   │   │   └── Footer.css
@@ -48,13 +48,17 @@ space-console/
 |
 ├── server/
 │   ├── config/
-│   │   └── emailConfig.json  # Gmail credentials
+│   │   └── emailConfig.json    # Gmail credentials (can be removed if using .env)
 │   ├── data/
-│   │   ├── data.json    # Mock chart data
-│   │   └── users.json   # User data
+│   │   └── data.json           # Mock chart data (unchanged)
 │   ├── routes/
-│   │   ├── auth.js      # Login and signup routes
-│   │   └── query.js     # Query route for charts
-│   ├── index.js         # Main server file
-│   └── package.json
-└── README.md
+│   │   ├── auth.js             # Updated for MySQL, Argon2, 2FA
+│   │   └── query.js            # Updated for multi-chart queries
+│   ├── db.js                   # New: MySQL connection pool
+│   ├── index.js                # Updated server with .env support
+│   ├── .env                    # New: Stores DB and email credentials
+│   ├── package.json            # Updated with mysql2, argon2, dotenv
+│   └── node_modules/           # Server-side dependencies
+|
+├── .gitignore                  # Updated to ignore server/.env
+└── README.md                   # Project documentation

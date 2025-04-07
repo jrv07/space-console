@@ -18,13 +18,46 @@
   padding: 20px 10px;
 }
 
+.navbar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.burger-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  padding: 0;
+  width: 20px; /* Match icon size */
+  margin-right: 10px; /* Space between burger and text */
+}
+
+.burger-btn:hover {
+  color: #8884d8;
+}
+
+.navbar-toggle h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+}
+
 .navbar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .navbar-header h3 {
-  margin: 0;
+  margin: 0 0 0 10px; /* Space between logo and text */
   color: #333;
+  font-size: 18px;
 }
 
 .navbar-header .navbar-logo {
@@ -35,7 +68,6 @@
 .navbar nav {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
 }
 
 .navbar a {
@@ -47,17 +79,21 @@
   border-radius: 4px;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Text aligns left when uncollapsed */
+  justify-content: flex-start;
 }
 
 .navbar.collapsed a {
-  justify-content: center; /* Icons center when collapsed */
-  padding: 10px 0;
+  justify-content: center;
 }
 
 .navbar a .icon {
   width: 20px;
   height: 20px;
+  min-width: 20px; /* Ensures icon doesn’t shrink */
+}
+
+.navbar a span {
+  margin-left: 10px; /* Space between icon and text */
 }
 
 .navbar a:hover {

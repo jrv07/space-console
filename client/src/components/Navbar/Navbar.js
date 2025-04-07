@@ -7,25 +7,32 @@ import './Navbar.css';
 const Navbar = ({ isCollapsed, toggleCollapse }) => {
   return (
     <div className={`navbar ${isCollapsed ? 'collapsed' : ''}`}>
+      <div className="navbar-toggle">
+        <button className="burger-btn" onClick={toggleCollapse}>
+          ☰
+        </button>
+        {!isCollapsed && <h3>Navigation</h3>}
+      </div>
       <div className="navbar-header">
-        {isCollapsed ? (
-          <img src={Logo} alt="Space Console Logo" className="navbar-logo" />
-        ) : (
-          <h3>Space Console</h3>
-        )}
+        <img src={Logo} alt="Space Console Logo" className="navbar-logo" />
+        {!isCollapsed && <h3>Space Console</h3>}
       </div>
       <nav>
         <NavLink to="/my-board" className={({ isActive }) => (isActive ? 'active' : '')}>
-          {isCollapsed ? <FaClipboard className="icon" /> : 'My Board'}
+          <FaClipboard className="icon" />
+          {!isCollapsed && <span>My Board</span>}
         </NavLink>
         <NavLink to="/search" className={({ isActive }) => (isActive ? 'active' : '')}>
-          {isCollapsed ? <FaSearch className="icon" /> : 'Search'}
+          <FaSearch className="icon" />
+          {!isCollapsed && <span>Search</span>}
         </NavLink>
         <NavLink to="/data" className={({ isActive }) => (isActive ? 'active' : '')}>
-          {isCollapsed ? <FaChartBar className="icon" /> : 'Data'}
+          <FaChartBar className="icon" />
+          {!isCollapsed && <span>Data</span>}
         </NavLink>
         <NavLink to="/templates" className={({ isActive }) => (isActive ? 'active' : '')}>
-          {isCollapsed ? <FaFileAlt className="icon" /> : 'Templates'}
+          <FaFileAlt className="icon" />
+          {!isCollapsed && <span>Templates</span>}
         </NavLink>
       </nav>
     </div>

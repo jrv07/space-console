@@ -127,4 +127,63 @@ router.post('/verify-otp', async (req, res) => {
   }
 });
 
+// Get user profile
+router.get('/user/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const [users] = await pool.query('SELECT username, email FROM users WHERE username = ?', [username]);
+    const user = users[0];
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.json(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Failed to fetch user data' });
+  }
+});
+
+// Update user profile
+router.put('/user/:username', async (req, res) => {
+  const { username } = req.params;
+  const { username: newUsername, email } = req.body;
+  try {
+    const [existingUsers] = await pool.query(
+      'SELECT * FROM users WHERE (username = ? OR email = ?) AND username != ?',
+      [newUsername, email, username]
+    );
+    if (existingUsers.length > 0) {
+      return res.status(400).json({ success: false, message: 'Username or email already in use' });
+    }
+
+    await pool.query(
+      'UPDATE users SET username = ?, email = ? WHERE username = ?',
+      [newUsername, email, username]
+    );
+    res.json({ success: true, message: 'Profile updated' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Failed to update profile' });
+  }
+});
+
+// Reset password
+router.post('/reset-password', async (req, res) => {
+  const { username, oldPassword, newPassword } = req.body;
+  try {
+    const [users] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+    const user = users[0];
+    if (!user || !(await argon2.verify(user.password, oldPassword))) {
+      return res.status(401).json({ success: false, message: 'Invalid old password' });
+    }
+
+    const hashedNewPassword = await argon2.hash(newPassword);
+    await pool.query('UPDATE users SET password = ? WHERE username = ?', [hashedNewPassword, username]);
+    res.json({ success: true, message: 'Password reset successful' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Failed to reset password' });
+  }
+});
+
 module.exports = router;

@@ -11,20 +11,18 @@ const Header = ({ onLogout, toggleNavbar, isNavbarCollapsed }) => {
     navigate('/search');
   };
 
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
+
   return (
     <header className="header">
       <div className="header-content">
-        <button
-          className={`burger-btn ${isNavbarCollapsed ? 'collapsed' : ''}`}
-          onClick={toggleNavbar}
-        >
-          ☰
-        </button>
         <div className="search-bar-container" onClick={handleSearchBarClick}>
           <SearchBar />
         </div>
         <div className="header-icons">
-          <button className="icon-btn">
+          <button className="icon-btn" onClick={handleProfileClick}>
             <FaUser />
           </button>
           <button className="icon-btn">
