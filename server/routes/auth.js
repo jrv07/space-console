@@ -167,7 +167,7 @@ router.put('/user/:username', async (req, res) => {
   }
 });
 
-// Reset password
+// Reset password (via profile)
 router.post('/reset-password', async (req, res) => {
   const { username, oldPassword, newPassword } = req.body;
   try {
@@ -183,6 +183,51 @@ router.post('/reset-password', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Failed to reset password' });
+  }
+});
+
+// Forgot password (Step 1: Request OTP)
+router.post('/forgot-password', async (req, res) => {
+  const { username, email } = req.body;
+  try {
+    const [users] = await pool.query('SELECT * FROM users WHERE username = ? AND email = ?', [username, email]);
+    const user = users[0];
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found or email mismatch' });
+    }
+
+    const otp = generateOTP();
+    otpStore[email] = { otp, timestamp: Date.now() };
+    await sendOTPEmail(email, otp);
+    res.json({ success: true, message: 'OTP sent to your email' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Failed to send OTP' });
+  }
+});
+
+// Forgot password reset (Step 2: Verify OTP and reset)
+router.post('/reset-forgot-password', async (req, res) => {
+  const { username, email, newPassword, otp } = req.body;
+  const storedOtpData = otpStore[email];
+  if (!storedOtpData) {
+    return res.status(400).json({ success: false, message: 'No OTP found' });
+  }
+
+  const { otp: storedOtp, timestamp } = storedOtpData;
+  const fiveMinutes = 5 * 60 * 1000;
+  if (Date.now() - timestamp > fiveMinutes) {
+    delete otpStore[email];
+    return res.status(400).json({ success: false, message: 'OTP expired' });
+  }
+
+  if (storedOtp === otp) {
+    const hashedNewPassword = await argon2.hash(newPassword);
+    await pool.query('UPDATE users SET password = ? WHERE username = ? AND email = ?', [hashedNewPassword, username, email]);
+    delete otpStore[email];
+    res.json({ success: true, message: 'Password reset successful' });
+  } else {
+    res.status(400).json({ success: false, message: 'Invalid OTP' });
   }
 });
 
