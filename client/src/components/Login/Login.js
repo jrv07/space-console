@@ -22,7 +22,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login', { username, password });
+      const response = await axios.post('http://localhost:5500/api/login', { username, password });
       if (response.data.success) {
         setEmail(response.data.email);
         setSuccess(response.data.message);
@@ -38,7 +38,7 @@ const Login = () => {
 
   const handleVerifyOtp = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/verify-login-otp', { email, otp });
+      const response = await axios.post('http://localhost:5500/api/verify-login-otp', { email, otp });
       if (response.data.success) {
         dispatch(login({ username: response.data.username, token: response.data.token }));
         setSuccess('Login successful! Redirecting...');
@@ -53,7 +53,7 @@ const Login = () => {
 
   const handleForgotPassword = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/forgot-password', {
+      const response = await axios.post('http://localhost:5500/api/forgot-password', {
         username: forgotUsername,
         email: forgotEmail,
       });
@@ -75,7 +75,7 @@ const Login = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5000/api/reset-forgot-password', {
+      const response = await axios.post('http://localhost:5500/api/reset-forgot-password', {
         username: forgotUsername,
         email: forgotEmail,
         newPassword,

@@ -18,7 +18,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/user/${username}`);
+        const response = await axios.get(`http://localhost:5500/api/user/${username}`);
         setUserData(response.data);
         setNewUsername(response.data.username);
         setNewEmail(response.data.email);
@@ -31,7 +31,7 @@ const Profile = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/user/${username}`, {
+      const response = await axios.put(`http://localhost:5500/api/user/${username}`, {
         username: newUsername,
         email: newEmail,
       });
@@ -53,7 +53,7 @@ const Profile = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5000/api/reset-password', {
+      const response = await axios.post('http://localhost:5500/api/reset-password', {
         username,
         oldPassword,
         newPassword,

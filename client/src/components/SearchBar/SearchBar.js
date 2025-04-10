@@ -14,7 +14,7 @@ const SearchBar = () => {
     if (!query.trim()) return;
     dispatch(setLoading());
     try {
-      const response = await axios.post('http://localhost:5000/api/query', { query });
+      const response = await axios.post('http://localhost:5500/api/query', { query });
       dispatch(setResults(response.data));
       navigate('/search'); // Navigate to search page after query
     } catch (err) {

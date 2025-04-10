@@ -21,7 +21,7 @@ const Signup = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5000/api/signup', {
+      const response = await axios.post('http://localhost:5500/api/signup', {
         username,
         email,
         password,
@@ -41,7 +41,7 @@ const Signup = () => {
 
   const handleVerifyOtp = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/verify-otp', {
+      const response = await axios.post('http://localhost:5500/api/verify-otp', {
         username,
         email,
         hashedPassword,
