@@ -8,3 +8,4 @@ node_modules/
 client/.gitignore
 client/node_modules
 server/.env
+*.pyc

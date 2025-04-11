@@ -12,3 +12,9 @@ CREATE TABLE IF NOT EXISTS users (
 -- Optional: insert some dummy data
 INSERT INTO users (username, email, password) VALUES
 ('admin', 'pururavamishra@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$DE7phcLOxvsp3uoOpM8exw$GRoddwZZ0Um26nXFI1OHoMU2TXT8yLSD0TBF+vVgnsQ');
+
+CREATE TABLE IF NOT EXISTS items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  description TEXT NOT NULL
+);
