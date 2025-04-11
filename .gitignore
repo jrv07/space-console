@@ -1,11 +1,10 @@
 # Ignore sensitive config and data files
 server/config/emailConfig.json
 server/data/users.json
-server/.env
-
 # Ignore node_modules
 node_modules/
 
 # Ignore 
 client/.gitignore
 client/node_modules
+server/.env
