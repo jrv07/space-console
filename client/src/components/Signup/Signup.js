@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../config'; // Import config
 import './Signup.css';
 
 const Signup = () => {
@@ -12,7 +13,7 @@ const Signup = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [step, setStep] = useState(1);
-  const [hashedPassword, setHashedPassword] = useState(''); // Store hashed password
+  const [hashedPassword, setHashedPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSignup = async () => {
@@ -21,7 +22,7 @@ const Signup = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:5500/api/signup', {
+      const response = await axios.post(`${API_BASE_URL}/api/signup`, {
         username,
         email,
         password,
@@ -41,7 +42,7 @@ const Signup = () => {
 
   const handleVerifyOtp = async () => {
     try {
-      const response = await axios.post('http://localhost:5500/api/verify-otp', {
+      const response = await axios.post(`${API_BASE_URL}/api/verify-otp`, {
         username,
         email,
         hashedPassword,
@@ -63,7 +64,7 @@ const Signup = () => {
     <div className="signup-container">
       <h2>{step === 1 ? 'Sign Up' : 'Verify Email'}</h2>
       {step === 1 ? (
-        <>
+        <form onSubmit={(e) => { e.preventDefault(); handleSignup(); }}>
           <input
             type="text"
             placeholder="Username"
@@ -88,18 +89,18 @@ const Signup = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          <button onClick={handleSignup}>Sign Up</button>
-        </>
+          <button type="submit">Sign Up</button>
+        </form>
       ) : (
-        <>
+        <form onSubmit={(e) => { e.preventDefault(); handleVerifyOtp(); }}>
           <input
             type="text"
             placeholder="Enter OTP"
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
           />
-          <button onClick={handleVerifyOtp}>Verify OTP</button>
-        </>
+          <button type="submit">Verify OTP</button>
+        </form>
       )}
       {error && <p className="error">{error}</p>}
       {success && <p className="success">{success}</p>}

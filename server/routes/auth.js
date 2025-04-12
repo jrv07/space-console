@@ -32,7 +32,7 @@ const sendOTPEmail = async (email, otp) => {
   await transporter.sendMail(mailOptions);
 };
 
-// Login route (Step 1: Request OTP)
+// Login route (No OTP for development)
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -42,38 +42,14 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
-    const otp = generateOTP();
-    otpStore[user.email] = { otp, timestamp: Date.now() };
-    await sendOTPEmail(user.email, otp);
-    res.json({ success: true, message: 'OTP sent to your email', email: user.email });
+    res.json({
+      success: true,
+      token: 'mock-token-' + Date.now(),
+      username: user.username,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Login failed' });
-  }
-});
-
-// Login OTP verification (Step 2)
-router.post('/verify-login-otp', async (req, res) => {
-  const { email, otp } = req.body;
-  const storedOtpData = otpStore[email];
-  if (!storedOtpData) {
-    return res.status(400).json({ success: false, message: 'No OTP found' });
-  }
-
-  const { otp: storedOtp, timestamp } = storedOtpData;
-  const fiveMinutes = 5 * 60 * 1000;
-  if (Date.now() - timestamp > fiveMinutes) {
-    delete otpStore[email];
-    return res.status(400).json({ success: false, message: 'OTP expired' });
-  }
-
-  if (storedOtp === otp) {
-    delete otpStore[email];
-    const [users] = await pool.query('SELECT username FROM users WHERE email = ?', [email]);
-    const user = users[0];
-    res.json({ success: true, token: 'mock-token-' + Date.now(), username: user.username });
-  } else {
-    res.status(400).json({ success: false, message: 'Invalid OTP' });
   }
 });
 

@@ -62,3 +62,16 @@ space-console/
 |
 ├── .gitignore                  # Updated to ignore server/.env
 └── README.md                   # Project documentation
+
+Docker
+*To properly shut down
+docker-compose down -v
+
+*To spin-up the whole application
+docker-compose up --build
+
+Fast API
+*swagger
+in /rest.server
+uvicorn main:app --reload
+goto Http://127.0.0.1:8000/docs
