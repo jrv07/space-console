@@ -7,4 +7,4 @@ node_modules/
 client/.gitignore
 client/node_modules
 *.pyc
-rest-server/.env
+*.env
