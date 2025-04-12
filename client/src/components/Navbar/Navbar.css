@@ -18,34 +18,6 @@
   padding: 20px 10px;
 }
 
-.navbar-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.burger-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #333;
-  cursor: pointer;
-  padding: 0;
-  width: 20px; /* Match icon size */
-  margin-right: 10px; /* Space between burger and text */
-}
-
-.burger-btn:hover {
-  color: #8884d8;
-}
-
-.navbar-toggle h3 {
-  margin: 0;
-  color: #333;
-  font-size: 18px;
-}
-
 .navbar-header {
   display: flex;
   align-items: center;

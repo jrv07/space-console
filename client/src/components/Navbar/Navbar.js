@@ -7,14 +7,14 @@ import './Navbar.css';
 const Navbar = ({ isCollapsed, toggleCollapse }) => {
   return (
     <div className={`navbar ${isCollapsed ? 'collapsed' : ''}`}>
-      <div className="navbar-toggle">
-        <button className="burger-btn" onClick={toggleCollapse}>
-          ☰
-        </button>
-        {!isCollapsed && <h3>Navigation</h3>}
-      </div>
       <div className="navbar-header">
-        <img src={Logo} alt="Space Console Logo" className="navbar-logo" />
+        <img
+          src={Logo}
+          alt="Space Console Logo"
+          className="navbar-logo"
+          onClick={toggleCollapse}
+          style={{ cursor: 'pointer' }}
+        />
         {!isCollapsed && <h3>Space Console</h3>}
       </div>
       <nav>
