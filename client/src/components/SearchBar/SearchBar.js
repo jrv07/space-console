@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setLoading, setResults, setError } from '../../redux/store';
+import { API_BASE_URL } from '../../config'; // Import config
 import './SearchBar.css';
 
 const SearchBar = () => {
@@ -14,7 +15,7 @@ const SearchBar = () => {
     if (!query.trim()) return;
     dispatch(setLoading());
     try {
-      const response = await axios.post('{API_BASE_URL}/api/query', { query });
+      const response = await axios.post(`${API_BASE_URL}/api/query`, { query });
       dispatch(setResults(response.data));
       navigate('/search'); // Navigate to search page after query
     } catch (err) {
