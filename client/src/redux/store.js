@@ -1,9 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, configureStore } from '@reduxjs/toolkit';
 
 const dataSlice = createSlice({
   name: 'data',
-  initialState: { results: null, loading: false, error: null, pinnedCharts: [] },
+  initialState: {
+    results: null,
+    loading: false,
+    error: null,
+    pinnedCharts: [],
+    queryHistory: [], // Store { query, results }
+  },
   reducers: {
     setLoading(state) {
       state.loading = true;
@@ -12,20 +17,29 @@ const dataSlice = createSlice({
     setResults(state, action) {
       state.loading = false;
       state.results = action.payload;
+      // Add to history
+      state.queryHistory.unshift(action.payload);
     },
     setError(state, action) {
       state.loading = false;
       state.error = action.payload;
+      // Add error to history
+      state.queryHistory.unshift({ query: action.payload.query, results: [{ error: action.payload.message }] });
     },
     pinChart(state, action) {
       const chart = action.payload;
-      // Avoid duplicates by checking title or unique ID
       if (!state.pinnedCharts.some(c => c.title === chart.title)) {
         state.pinnedCharts.push(chart);
       }
     },
     unpinChart(state, action) {
       state.pinnedCharts = state.pinnedCharts.filter(c => c.title !== action.payload);
+    },
+    clearSearch(state) {
+      state.results = null;
+      state.error = null;
+      state.loading = false;
+      state.queryHistory = [];
     },
   },
 });
@@ -43,12 +57,12 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.username = null;
       state.token = null;
-      state.pinnedCharts = []; // Clear pinned charts on logout
+      state.pinnedCharts = [];
     },
   },
 });
 
-export const { setLoading, setResults, setError, pinChart, unpinChart } = dataSlice.actions;
+export const { setLoading, setResults, setError, pinChart, unpinChart, clearSearch } = dataSlice.actions;
 export const { login, logout } = authSlice.actions;
 
 export const store = configureStore({

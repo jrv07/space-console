@@ -8,19 +8,22 @@ import './SearchBar.css';
 
 const SearchBar = () => {
   const [query, setQuery] = useState('');
-  const [isFocused, setIsFocused] = useState(false); // Track focus
+  const [isFocused, setIsFocused] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSearch = async () => {
     if (!query.trim()) return;
-    dispatch(setLoading());
     try {
       const response = await axios.post(`${API_BASE_URL}/api/query`, { query });
-      dispatch(setResults(response.data));
+      dispatch(setResults({ query, results: response.data }));
+      setQuery(''); // Clear input
+      setIsFocused(false); // Reset focus
       navigate('/search');
     } catch (err) {
-      dispatch(setError('Failed to fetch data'));
+      dispatch(setError({ query, message: 'Failed to fetch data' }));
+      setQuery(''); // Clear input
+      setIsFocused(false); // Reset focus
     }
   };
 

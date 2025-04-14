@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { login } from '../../redux/store';
+import { login, clearSearch } from '../../redux/store';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { API_BASE_URL } from '../../config'; // Import config
+import { API_BASE_URL } from '../../config';
 import './Login.css';
 
 const Login = () => {
@@ -16,7 +16,7 @@ const Login = () => {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [step, setStep] = useState(1); // 1: Login, 3: Forgot Password, 4: Forgot OTP
+  const [step, setStep] = useState(1);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -25,6 +25,7 @@ const Login = () => {
       const response = await axios.post(`${API_BASE_URL}/api/login`, { username, password });
       if (response.data.success) {
         dispatch(login({ username: response.data.username, token: response.data.token }));
+        dispatch(clearSearch()); // Clear search results
         setSuccess('Login successful! Redirecting...');
         setError('');
         setTimeout(() => navigate('/my-board'), 2000);
@@ -45,7 +46,7 @@ const Login = () => {
       if (response.data.success) {
         setSuccess(response.data.message);
         setError('');
-        setStep(4); // Move to OTP verification for forgot password
+        setStep(4);
       } else {
         setError(response.data.message);
       }
