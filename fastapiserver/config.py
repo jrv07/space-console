@@ -9,6 +9,10 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "super-secret"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
+
+    #OPENAI KEY
+    OPENAI_API_KEY: str
+
     @property
     def DATABASE_URL(self):
         return f"mysql+pymysql://{self.db_user}:{self.db_password}@{self.db_host}:{self.port}/{self.db_name}"

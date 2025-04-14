@@ -2,9 +2,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from db.database import database
-from routers import auth, sales
+from routers import auth, sales, chat
 
-app = FastAPI(title="SpaceConosle API", version="1.0.0")
+app = FastAPI(title="SpaceConsole API", version="1.0.0")
 
 # Allow CORS from frontend PRODUCTION LEVEL
 app.add_middleware(
@@ -28,3 +28,4 @@ async def shutdown():
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
 app.include_router(sales.router, prefix="/data", tags=["data"])
+app.include_router(chat.router, prefix="/api", tags=["chat"])
