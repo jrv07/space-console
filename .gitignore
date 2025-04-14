@@ -8,3 +8,4 @@ client/.gitignore
 client/node_modules
 *.pyc
 *.env
+mysql_data/*

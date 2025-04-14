@@ -2,24 +2,18 @@
 -- mysql -u yourusername -p < schema.sql
 CREATE DATABASE IF NOT EXISTS space_console;
 USE space_console;
-
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(50) UNIQUE NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL
+  hashed_password VARCHAR(255) NOT NULL,
+  role VARCHAR(255) NOT NULL
 );
 -- Optional: insert some dummy data
-INSERT INTO users (username, email, password) VALUES
-('admin', 'pururavamishra@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$DE7phcLOxvsp3uoOpM8exw$GRoddwZZ0Um26nXFI1OHoMU2TXT8yLSD0TBF+vVgnsQ');
+INSERT INTO users (username, email, hashed_password, role) VALUES
+('admin', 'pururavamishra@gmail.com', '$2b$12$skiMJWReKrdiVqSi.UJO3.5Q70kQK17jK1vbptm2a2VQlBCWc78eW','admin');
 
-CREATE DATABASE IF NOT EXISTS final_table;
-USE final_table;
-CREATE TABLE IF NOT EXISTS items (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  description TEXT NOT NULL
-);
+USE space_console;
 CREATE TABLE  sales_data (
     Date DATE NOT NULL,
     Account_ID INT NOT NULL,
@@ -38,3 +32,4 @@ ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
 (Date, Account_ID, Account_Name, Order_ID, Revenue, Commission_Profit, Status, Quantity, Target_Revenue);
+
