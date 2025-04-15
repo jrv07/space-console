@@ -1,28 +1,46 @@
 .my-board {
-  margin-left: 60px;
-  padding: 20px;
+  margin-left: 60px; /* Collapsed navbar */
+  padding: 80px 20px 20px; /* Top padding to clear header */
   min-height: 100vh;
   background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content */
   transition: margin-left 0.3s ease;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 .my-board.navbar-expanded {
-  margin-left: 220px;
+  margin-left: 180px; /* Expanded navbar */
 }
 
 .my-board h2 {
+  margin: 0 0 20px;
+  font-size: 24px;
+  color: #333;
   text-align: center;
-  margin-bottom: 20px;
 }
 
 .pinned-charts {
+  width: 100%;
+  max-width: 800px; /* Match Search page */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px; /* Space between charts */
+  gap: 20px;
 }
 
 .my-board p {
   text-align: center;
   color: #666;
+  margin: 20px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .my-board {
+    padding: 70px 10px 10px;
+  }
+  .my-board h2 {
+    font-size: 20px;
+  }
 }

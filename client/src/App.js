@@ -12,6 +12,7 @@ import Templates from './components/Templates/Templates';
 import Profile from './components/Profile/Profile'; // New import
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
+import './styles/fonts.css'; // Import fonts
 import './App.css';
 
 const ProtectedRoute = ({ children }) => {

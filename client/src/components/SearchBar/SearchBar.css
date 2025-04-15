@@ -1,18 +1,20 @@
 .search-bar {
   width: 100%;
   max-width: 400px; /* Default width */
+  margin-left: 180px; /* Space from the left side */
+  margin-right: 20px; /* Space from the right side */
   display: flex;
   align-items: center;
   padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: max-width 0.3s ease; /* Smooth width transition */
+  transition: max-width 0.3s ease; /* Smooth transition */
+  font-family: 'Space Grotesk', sans-serif;
 }
 
-/* Double width when input is focused */
-.search-bar:focus-within {
-  max-width: 1000px; /* Double the default 400px */
+.search-bar.focused {
+  max-width: 600px; /* Expand on focus */
 }
 
 .search-bar input {
@@ -20,17 +22,24 @@
   border: none;
   outline: none;
   font-size: 16px;
+  background: transparent; /* Match header background */
 }
 
-.search-bar button {
-  padding: 4px 12px;
-  background: #8884d8;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .search-bar {
+    max-width: 300px; /* Smaller default on tablets */
+  }
+  .search-bar.focused {
+    max-width: 450px; /* Smaller expansion */
+  }
 }
 
-.search-bar button:hover {
-  background: #6664b6;
+@media (max-width: 480px) {
+  .search-bar {
+    max-width: 200px; /* Minimal default on mobile */
+  }
+  .search-bar.focused {
+    max-width: 300px; /* Minimal expansion */
+  }
 }

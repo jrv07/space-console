@@ -12,6 +12,7 @@
   left: 50%;
   transform: translate(-50%, -50%); /* Center perfectly */
   box-sizing: border-box; /* Include padding in width */
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 .signup-container h2 {
