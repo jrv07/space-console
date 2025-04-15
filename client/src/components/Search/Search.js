@@ -52,9 +52,9 @@ const Search = () => {
                     )}
                   </div>
                   <div className="result-section db-section">
-                    <h3 className="db-title">Database Query</h3>
                     <div className="db-query-container">
                       <pre className="db-query">
+                        <span className="language-label">sql</span>
                         {entry.results[0]?.sql || 'No query generated.'}
                       </pre>
                       <button

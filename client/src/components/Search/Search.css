@@ -36,13 +36,13 @@
 .user-query {
   width: 100%;
   padding: 15px 0;
-  text-align: right; /* Right-align prompt */
+  text-align: right;
   box-sizing: border-box;
 }
 
 .user-query h2 {
   margin: 0;
-  font-size: 28px; /* Increased from 24px */
+  font-size: 28px;
   color: #333;
 }
 
@@ -67,10 +67,6 @@
   text-align: center;
 }
 
-.db-title {
-  text-align: center; /* Center DB title */
-}
-
 .result-section h3 {
   margin: 0 0 10px;
   font-size: 18px;
@@ -85,21 +81,39 @@
 .db-query-container {
   position: relative;
   display: flex;
-  align-items: center; /* Center vertically */
+  align-items: center;
 }
 
 .db-query {
   flex-grow: 1;
-  font-family: 'Courier New', monospace;
-  color: #333;
-  background: #f5f5f5;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  font-family: Consolas, 'Courier New', monospace;
+  color: #d1d5db;
+  background: #343541;
+  padding: 40px 16px 16px 16px; /* Increased top padding */
+  border: 1px solid #444;
+  border-radius: 6px;
   margin: 0;
   white-space: pre-wrap;
   text-align: left;
   user-select: text;
+  position: relative;
+}
+
+.language-label {
+  position: absolute;
+  top: 12px; /* Adjusted for larger padding */
+  left: 16px;
+  font-size: 12px;
+  color: #8b8f99;
+  background: #2a2b36;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.db-query .language-label + * {
+  margin-top: 16px; /* Adjusted to position text below label */
+  display: block;
 }
 
 .copy-button {
@@ -107,16 +121,16 @@
   border: none;
   padding: 10px;
   cursor: pointer;
-  color: #666;
+  color: #8b8f99;
   font-size: 16px;
   position: absolute;
-  top: 50%; /* Center vertically */
+  top: 50%;
   right: 10px;
-  transform: translateY(-50%); /* Adjust for true center */
+  transform: translateY(-50%);
 }
 
 .copy-button:hover {
-  color: #333;
+  color: #d1d5db;
 }
 
 .copy-button svg {
@@ -154,7 +168,7 @@
     padding: 20px 10px;
   }
   .user-query h2 {
-    font-size: 24px; /* Increased from 20px */
+    font-size: 24px;
   }
   .result-section h3 {
     font-size: 16px;
@@ -165,5 +179,9 @@
   .copy-button {
     font-size: 14px;
     padding: 8px;
+  }
+  .language-label {
+    font-size: 11px;
+    padding: 1px 4px;
   }
 }
