@@ -1,5 +1,5 @@
 .search-page {
-  margin-left: 60px; /* Collapsed navbar */
+  margin-left: 60px;
   padding: 20px;
   min-height: 100vh;
   background: #fafafa;
@@ -7,10 +7,11 @@
   flex-direction: column;
   align-items: center;
   transition: margin-left 0.3s ease;
+  font-family: 'Space Grotesk', sans-serif;
 }
 
 .search-page.navbar-expanded {
-  margin-left: 180px; /* Expanded navbar */
+  margin-left: 180px;
 }
 
 .search-content {
@@ -34,17 +35,14 @@
 
 .user-query {
   width: 100%;
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  padding: 15px 0;
+  text-align: right; /* Right-align prompt */
   box-sizing: border-box;
 }
 
 .user-query h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 28px; /* Increased from 24px */
   color: #333;
 }
 
@@ -57,11 +55,20 @@
 }
 
 .result-section {
+  padding: 15px 0;
+  text-align: left;
+}
+
+.chart-section {
   background: #fff;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
+}
+
+.db-title {
+  text-align: center; /* Center DB title */
 }
 
 .result-section h3 {
@@ -75,15 +82,45 @@
   color: #666;
 }
 
+.db-query-container {
+  position: relative;
+  display: flex;
+  align-items: center; /* Center vertically */
+}
+
 .db-query {
-  background: #f5f5f5;
-  padding: 10px;
-  border-radius: 4px;
+  flex-grow: 1;
   font-family: 'Courier New', monospace;
   color: #333;
+  background: #f5f5f5;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   margin: 0;
   white-space: pre-wrap;
   text-align: left;
+  user-select: text;
+}
+
+.copy-button {
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: #666;
+  font-size: 16px;
+  position: absolute;
+  top: 50%; /* Center vertically */
+  right: 10px;
+  transform: translateY(-50%); /* Adjust for true center */
+}
+
+.copy-button:hover {
+  color: #333;
+}
+
+.copy-button svg {
+  vertical-align: middle;
 }
 
 .status-message,
@@ -117,12 +154,16 @@
     padding: 20px 10px;
   }
   .user-query h2 {
-    font-size: 20px;
+    font-size: 24px; /* Increased from 20px */
   }
   .result-section h3 {
     font-size: 16px;
   }
   .separator {
     margin: 15px 0;
+  }
+  .copy-button {
+    font-size: 14px;
+    padding: 8px;
   }
 }
