@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FASTAPI_BASE_URL } from '../../config';
 import './Signup.css';
 
 const Signup = () => {
@@ -18,7 +19,7 @@ const Signup = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8000/auth/signup', {
+      const response = await axios.post(`${FASTAPI_BASE_URL}/auth/signup`, {
         username,
         email,
         password,

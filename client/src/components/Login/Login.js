@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { login, clearSearch } from '../../redux/store';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FASTAPI_BASE_URL } from '../../config';
 import './Login.css';
 
 const Login = () => {
@@ -19,7 +20,7 @@ const Login = () => {
       formData.append('username', username);
       formData.append('password', password);
 
-      const response = await axios.post('http://localhost:8000/auth/login', formData, {
+      const response = await axios.post(`${FASTAPI_BASE_URL}/auth/login`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
