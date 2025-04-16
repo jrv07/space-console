@@ -75,3 +75,7 @@ Fast API
 in /rest.server
 uvicorn main:app --reload
 goto Http://127.0.0.1:8000/docs
+
+To satrt mysql
+mysql -u root -p
+db_name: space_console
