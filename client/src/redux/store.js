@@ -17,13 +17,11 @@ const dataSlice = createSlice({
     setResults(state, action) {
       state.loading = false;
       state.results = action.payload;
-      // Add to history
       state.queryHistory.unshift(action.payload);
     },
     setError(state, action) {
       state.loading = false;
       state.error = action.payload;
-      // Add error to history
       state.queryHistory.unshift({ query: action.payload.query, results: [{ error: action.payload.message }] });
     },
     pinChart(state, action) {
@@ -64,7 +62,6 @@ const authSlice = createSlice({
 
 export const { setLoading, setResults, setError, pinChart, unpinChart, clearSearch } = dataSlice.actions;
 export const { login, logout } = authSlice.actions;
-
 export const store = configureStore({
   reducer: {
     data: dataSlice.reducer,

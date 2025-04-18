@@ -1,29 +1,71 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance';
 import { setLoading, setResults, setError } from '../../redux/store';
-import { API_BASE_URL } from '../../config';
+import { FASTAPI_BASE_URL } from '../../config';
 import './SearchBar.css';
 
 const SearchBar = () => {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSearch = async () => {
     if (!query.trim()) return;
+
+    dispatch(setLoading(true));
+
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/query`, { query });
-      dispatch(setResults({ query, results: response.data }));
-      setQuery(''); // Clear input
-      setIsFocused(false); // Reset focus
+      const response = await axiosInstance.post(
+        `${FASTAPI_BASE_URL}/api/chat`,
+        {
+          session_id: sessionId || null,
+          messages: [{ role: 'user', content: query, data: [] }],
+        },
+        {
+          headers: { 'Accept': 'application/json' },
+          withCredentials: true, // 👈 THIS is what sends your cookie
+        }
+      );
+
+      const { session_id, messages } = response.data;
+      setSessionId(session_id);
+
+      const assistantMsg = messages.find((msg) => msg.role === 'assistant');
+      const results = assistantMsg
+        ? [{ text: assistantMsg.content }]
+        : [{ text: 'No response available.' }];
+
+      dispatch(
+        setResults({
+          query,
+          results,
+        })
+      );
+
+      setQuery('');
+      setIsFocused(false);
       navigate('/search');
     } catch (err) {
-      dispatch(setError({ query, message: 'Failed to fetch data' }));
-      setQuery(''); // Clear input
-      setIsFocused(false); // Reset focus
+      console.error('SearchBar.js error:', {
+        message: err.message,
+        response: err.response?.data,
+        status: err.response?.status,
+      });
+      dispatch(
+        setError({
+          query,
+          message: err.response?.data?.detail || 'Failed to fetch response',
+        })
+      );
+      setQuery('');
+      setIsFocused(false);
+      navigate('/search');
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 

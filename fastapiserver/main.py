@@ -9,7 +9,7 @@ app = FastAPI(title="SpaceConsole API", version="1.0.0")
 # Allow CORS from frontend PRODUCTION LEVEL
 app.add_middleware(
     CORSMiddleware,  #  `middleware_class`
-    allow_origins=["*"], #["http://localhost:3000"],  # or ["*"] for dev
+    allow_origins=["http://localhost:3000"],  # or ["*"] for dev
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

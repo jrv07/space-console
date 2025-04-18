@@ -25,15 +25,12 @@ const Login = () => {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json',
         },
-      });
-
-      const { access_token } = response.data;
-      document.cookie = `access_token=${access_token}; HttpOnly; SameSite=Lax; Path=/`;
-      dispatch(login({ username, token: access_token }));
-      dispatch(clearSearch());
-      setSuccess('Login successful! Redirecting...');
-      setError('');
-      setTimeout(() => navigate('/my-board'), 2000);
+        withCredentials: true
+        });
+        const { access_token } = response.data;
+        dispatch(login({ username, token: access_token }));
+        dispatch(clearSearch());
+        navigate('/my-board'); // 👈 Navigate immediately
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed');
       setSuccess('');

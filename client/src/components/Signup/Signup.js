@@ -19,7 +19,7 @@ const Signup = () => {
       return;
     }
     try {
-      const response = await axios.post(`${FASTAPI_BASE_URL}/auth/signup`, {
+      await axios.post(`${FASTAPI_BASE_URL}/auth/signup`, {
         username,
         email,
         password,
