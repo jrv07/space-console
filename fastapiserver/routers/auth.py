@@ -24,8 +24,9 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
         key="access_token",
         value=token,
         httponly=True,
-        secure=False,  # Set Secure=False for HTTP connections in local development
-        samesite="Lax",  # Lax is fine for first-party requests
+        secure=True,       # ✅ True now that you're on HTTPS
+        samesite="None",   # ✅ None for cross‑site cookies
+        path="/",
         max_age=3600
     )
     return JSONResponse(

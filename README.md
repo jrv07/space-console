@@ -72,9 +72,10 @@ docker-compose up --build
 
 Fast API
 *swagger
-in /rest.server
-uvicorn main:app --reload
-goto Http://127.0.0.1:8000/docs
+in /fastapiserver
+https://localhost:8000/docs
+With HTTPS Request
+uvicorn main:app --host 0.0.0.0 --port 8000 --ssl-keyfile=key.pem --ssl-certfile=cert.pem
 
 To satrt mysql
 mysql -u root -p

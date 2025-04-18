@@ -11,3 +11,5 @@ client/node_modules
 *.env
 mysql_data/*
 client/build
+client/package-lock.json
+.DS_Store
