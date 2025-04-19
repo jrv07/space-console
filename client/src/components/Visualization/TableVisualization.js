@@ -29,7 +29,7 @@ const TableVisualization = ({ data }) => {
   if (!data || data.length === 0) return null;
 
   return (
-    <div className="table-container">
+    <div className="table-scroll-body">
       <table className="data-table">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

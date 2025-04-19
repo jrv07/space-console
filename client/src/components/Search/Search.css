@@ -202,6 +202,19 @@
   border-bottom: none;
 }
 
+.table-scroll-body {
+  display: block;
+  max-height: calc(10 * 42px); /* Approx 10 rows — adjust if needed */
+  overflow-y: auto;
+}
+
+.data-table thead,
+.data-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .search-page {

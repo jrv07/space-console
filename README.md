@@ -20,6 +20,7 @@ space-console/
 │   │   │   │   └── SearchBar.css
 │   │   │   ├── Visualization/
 │   │   │   │   ├── Visualization.js
+│   │   │   │   ├── TableVisualization.js
 │   │   │   │   └── Visualization.css
 │   │   │   ├── Dashboard/
 │   │   │   │   ├── Dashboard.js
