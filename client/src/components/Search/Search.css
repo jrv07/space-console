@@ -169,6 +169,11 @@
   padding: 16px;
   overflow-x: auto; /* enable horizontal scroll on small screens */
   box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.result-table {
+  margin-bottom: 20px;
 }
 
 .data-table {

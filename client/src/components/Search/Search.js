@@ -113,10 +113,14 @@ const Search = () => {
                         <p className="error">{entry.results[0].error}</p>
                       ) : (
                         <>
-                          {renderContent(latestAssistantMessage?.content || 'No response available.')}
+                        <div className="result-table">
                           {latestAssistantMessage?.data && latestAssistantMessage.data.length > 0 && (
                             <TableVisualization data={latestAssistantMessage.data} />
                           )}
+                          </div>
+                          <div className="result-text">
+                          {renderContent(latestAssistantMessage?.content || 'No response available.')}
+                          </div>
                         </>
                       )}
                     </div>
