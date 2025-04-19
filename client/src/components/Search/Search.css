@@ -82,7 +82,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin: 15px 0; /* Added margin for gap between code block and text */
+  margin: 15px 0;
 }
 
 .db-query {
@@ -158,6 +158,18 @@
   border: 0;
   border-top: 1px solid #ddd;
   margin: 20px 0;
+}
+
+.data-block {
+  font-family: Consolas, 'Courier New', monospace;
+  color: #333;
+  background: #f5f5f5;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin: 15px 0;
+  white-space: pre-wrap;
+  text-align: left;
 }
 
 /* Responsive */

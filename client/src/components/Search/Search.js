@@ -9,10 +9,11 @@ const Search = () => {
   const [copiedIndex, setCopiedIndex] = useState(null);
 
   useEffect(() => {
+    console.log('Search.js: loading state:', loading, 'queryHistory length:', queryHistory.length); // Debug: Log state
     if (latestRef.current) {
       latestRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [queryHistory]);
+  }, [queryHistory, loading]);
 
   const handleCopy = (text, index) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -110,7 +111,14 @@ const Search = () => {
                       {entry.results[0]?.error ? (
                         <p className="error">{entry.results[0].error}</p>
                       ) : (
-                        renderContent(latestAssistantMessage?.content || 'No response available.')
+                        <>
+                          {renderContent(latestAssistantMessage?.content || 'No response available.')}
+                          {latestAssistantMessage?.data && latestAssistantMessage.data.length > 0 && (
+                            <pre className="data-block">
+                              {JSON.stringify(latestAssistantMessage.data, null, 2)}
+                            </pre>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>
