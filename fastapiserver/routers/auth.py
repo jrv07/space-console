@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from auth.auth_handler import create_access_token, verify_password
 from db.models import get_user_by_username, users
@@ -10,6 +11,7 @@ from db.database import database
 
 router = APIRouter()
 
+max_age = 60 * 60  # 1 hour
 
 @router.post("/login", operation_id="login_user")
 async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
@@ -22,11 +24,16 @@ async def login(response: Response, form_data: OAuth2PasswordRequestForm = Depen
         key="access_token",
         value=token,
         httponly=True,
-        secure=False,
-        samesite="Lax"
+        secure=True,       # ✅ True now that you're on HTTPS
+        samesite="None",   # ✅ None for cross‑site cookies
+        path="/",
+        max_age=3600
     )
-    return {"access_token": token, "token_type": "bearer"}
-
+    return JSONResponse(
+        content={"message": "Login successful"},
+        status_code=200,
+        headers=response.headers  # carry over the Set-Cookie header
+    )
 
 @router.post("/signup", response_model=UserOut, status_code=status.HTTP_201_CREATED, operation_id="signup_user")
 async def signup(user: UserCreate):

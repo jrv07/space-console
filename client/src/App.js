@@ -9,9 +9,10 @@ import Navbar from './components/Navbar/Navbar';
 import MyBoard from './components/MyBoard/MyBoard';
 import Data from './components/Data/Data';
 import Templates from './components/Templates/Templates';
-import Profile from './components/Profile/Profile'; // New import
+import Profile from './components/Profile/Profile';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
+import './styles/fonts.css';
 import './App.css';
 
 const ProtectedRoute = ({ children }) => {

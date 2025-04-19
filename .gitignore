@@ -1,7 +1,8 @@
 # Ignore sensitive config and data files
-server/data/users.json
+server/.env
 # Ignore node_modules
-node_modules/
+server/node_modules
+client/node_modules
 
 # Ignore 
 client/.gitignore
@@ -9,3 +10,7 @@ client/node_modules
 *.pyc
 *.env
 mysql_data/*
+client/build
+client/package-lock.json
+client/package.json
+.DS_Store

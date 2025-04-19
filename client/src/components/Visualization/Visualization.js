@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import { useDispatch, useSelector } from 'react-redux';
 import { pinChart, unpinChart } from '../../redux/store';
-import { FaThumbtack } from 'react-icons/fa'; // Pin icon
+import { FaThumbtack } from 'react-icons/fa';
 import './Visualization.css';
 
 const Visualization = ({ data, type, title }) => {
