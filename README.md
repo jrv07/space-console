@@ -77,6 +77,8 @@ https://localhost:8000/docs
 With HTTPS Request
 uvicorn main:app --host 0.0.0.0 --port 8000 --ssl-keyfile=key.pem --ssl-certfile=cert.pem
 
+Open in browser and Authenticate (allow in browser)
+https://127.0.0.1:8000/auth/login
 To satrt mysql
 mysql -u root -p
 db_name: space_console
