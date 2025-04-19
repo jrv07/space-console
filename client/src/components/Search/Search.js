@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FaCopy, FaCheck } from 'react-icons/fa';
+import TableVisualization from '../Visualization/TableVisualization';
 import './Search.css';
 
 const Search = () => {
@@ -114,9 +115,7 @@ const Search = () => {
                         <>
                           {renderContent(latestAssistantMessage?.content || 'No response available.')}
                           {latestAssistantMessage?.data && latestAssistantMessage.data.length > 0 && (
-                            <pre className="data-block">
-                              {JSON.stringify(latestAssistantMessage.data, null, 2)}
-                            </pre>
+                            <TableVisualization data={latestAssistantMessage.data} />
                           )}
                         </>
                       )}
