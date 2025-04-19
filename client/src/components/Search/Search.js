@@ -3,6 +3,43 @@ import { useSelector } from 'react-redux';
 import { FaCopy, FaCheck } from 'react-icons/fa';
 import TableVisualization from '../Visualization/TableVisualization';
 import './Search.css';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import prettier from 'prettier/standalone';
+import parserBabel from 'prettier/parser-babel';
+import parserHtml from 'prettier/parser-html';
+
+const formatCode = (code, language) => {
+  try {
+    
+    let parser;
+    let plugins = [];
+
+    switch (language) {
+      case 'js':
+      case 'javascript':
+      case 'jsx':
+      case 'json':
+        parser = 'babel';
+        plugins = [parserBabel];
+        break;
+      case 'html':
+        parser = 'html';
+        plugins = [parserHtml];
+        break;
+      default:
+        return code;
+    }
+
+    return prettier.format(code, {
+      parser,
+      plugins,
+    });
+  } catch (err) {
+    console.warn(`Formatting failed for ${language}`, err);
+    return code;
+  }
+};
 
 const Search = () => {
   const { queryHistory, loading } = useSelector((state) => state.data);
@@ -22,62 +59,93 @@ const Search = () => {
       setTimeout(() => setCopiedIndex(null), 2000);
     });
   };
-
-  const renderContent = (content) => {
-    console.log('renderContent input:', content); // Debug: Log raw content
-
+  const formatMarkdown = (content) => {
+    return content
+    // Ensure headers like ### start on a new line
+    .replace(/(?!\n)\s*###/g, '\n\n###')
+    // Ensure list items start on a new line
+    .replace(/(?!\n)\s*\d+\.\s/g, '\n$&') // Adding a new line before ordered list
+    .replace(/(?!\n)\s*-\s/g, '\n- ')    // Adding a new line before unordered list
+    // Ensure that there's a space before code blocks (for code block recognition)
+    .replace(/(?<=\n)```/g, '\n```') 
+    // Normalize multiple line breaks to two for consistency
+    .replace(/\n{2,}/g, '\n\n')
+    .trim();
+  };
+  
+  const renderContent = (content, handleCopy, copiedIndex) => {
+    if (!content) return <p>No response available.</p>;
+  
+    console.log('renderContent input:', content);
+  
     const codeBlockRegex = /```(\w+)?\s*([\s\S]*?)\s*```/g;
     const parts = [];
     let lastIndex = 0;
     let match;
     let codeIndex = 0;
-
+  
     while ((match = codeBlockRegex.exec(content)) !== null) {
-      const [fullMatch, , code] = match; // Ignore language capture group
+      const [fullMatch, lang, code] = match;
       const startIndex = match.index;
       const endIndex = codeBlockRegex.lastIndex;
-
-      console.log('Code block match:', { fullMatch, code, startIndex, endIndex }); // Debug: Log match details
-
+  
       if (startIndex > lastIndex) {
         const text = content.slice(lastIndex, startIndex);
         if (text.trim()) {
           parts.push({ type: 'text', value: text });
         }
       }
-
-      parts.push({ type: 'code', language: 'sql', value: code.trim(), index: codeIndex }); // Hardcode language to 'sql'
-
+  
+      // Format SQL code before pushing it to the parts array
+      const formattedCode = formatCode(code.trim(), lang || 'sql');
+  
+      // Push the formatted code block
+      parts.push({
+        type: 'code',
+        language: lang || 'sql',
+        value: formattedCode,
+        index: codeIndex,
+      });
+  
       lastIndex = endIndex;
       codeIndex++;
     }
-
+  
     if (lastIndex < content.length) {
       const text = content.slice(lastIndex);
       if (text.trim()) {
         parts.push({ type: 'text', value: text });
       }
     }
-
+  
     if (parts.length === 0) {
-      console.log('No code blocks found, rendering as text:', content);
-      return <p>{content || 'No response available.'}</p>;
+      return (
+        <div className="prose max-w-none">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {formatMarkdown(content)}
+          </ReactMarkdown>
+        </div>
+      );
     }
-
-    console.log('Rendered parts:', parts); // Debug: Log parts
-
+  
     return parts.map((part, partIndex) => (
       <React.Fragment key={partIndex}>
         {part.type === 'text' ? (
-          <p>{part.value}</p>
+          <div className="prose max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {formatMarkdown(part.value)}
+            </ReactMarkdown>
+          </div>
         ) : (
-          <div className="db-query-container">
-            <pre className="db-query">
-              <span className="language-label">{part.language}</span>
+          <div className="db-query-container my-4">
+            <pre className="db-query relative bg-gray-800 text-white p-4 rounded-lg overflow-x-auto">
+              <span className="language-label absolute top-1 left-2 text-sm text-gray-400">
+                {part.language}
+              </span>
               <code>{part.value}</code>
             </pre>
             <button
-              className="copy-button"
+              className="copy-button mt-1 ml-2 text-sm text-blue-600 hover:text-blue-800"
               onClick={() => handleCopy(part.value, part.index)}
               title="Copy code"
             >
@@ -88,6 +156,8 @@ const Search = () => {
       </React.Fragment>
     ));
   };
+  
+  
 
   return (
     <div className="search-page">
@@ -119,7 +189,7 @@ const Search = () => {
                           )}
                           </div>
                           <div className="result-text">
-                          {renderContent(latestAssistantMessage?.content || 'No response available.')}
+                            {renderContent(latestAssistantMessage?.content, handleCopy, copiedIndex)}
                           </div>
                         </>
                       )}
