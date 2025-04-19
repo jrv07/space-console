@@ -10,6 +10,7 @@ const SearchBar = () => {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [sessionId, setSessionId] = useState(null);
+  const [messages, setMessages] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -18,31 +19,29 @@ const SearchBar = () => {
 
     dispatch(setLoading(true));
 
+    const newMessage = { role: 'user', content: query, data: [] };
+
     try {
       const response = await axiosInstance.post(
         `${FASTAPI_BASE_URL}/api/chat`,
         {
           session_id: sessionId || null,
-          messages: [{ role: 'user', content: query, data: [] }],
+          messages: [...messages, newMessage],
         },
         {
           headers: { 'Accept': 'application/json' },
-          withCredentials: true, // 👈 THIS is what sends your cookie
+          withCredentials: true,
         }
       );
 
-      const { session_id, messages } = response.data;
+      const { session_id, messages: responseMessages } = response.data;
       setSessionId(session_id);
-
-      const assistantMsg = messages.find((msg) => msg.role === 'assistant');
-      const results = assistantMsg
-        ? [{ text: assistantMsg.content }]
-        : [{ text: 'No response available.' }];
+      setMessages(responseMessages);
 
       dispatch(
         setResults({
           query,
-          results,
+          results: responseMessages, // Store full messages array
         })
       );
 
