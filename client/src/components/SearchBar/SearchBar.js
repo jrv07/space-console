@@ -18,12 +18,15 @@ const SearchBar = () => {
   const handleSearch = async () => {
     if (!query.trim() || isSubmitting) return;
 
-    setIsSubmitting(true); // block further submits
+    setIsSubmitting(true);
     dispatch(setLoading(true));
+    console.log('SearchBar.js: handleSearch triggered, query:', query);
 
     const newMessage = { role: 'user', content: query, data: [] };
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
       const response = await axiosInstance.post(
         `${FASTAPI_BASE_URL}/api/chat`,
         {
@@ -33,8 +36,12 @@ const SearchBar = () => {
         {
           headers: { Accept: 'application/json' },
           withCredentials: true,
+          signal: controller.signal,
         }
       );
+      clearTimeout(timeoutId);
+
+      console.log('SearchBar.js: Server response received:', response.data);
 
       const { session_id, messages: responseMessages } = response.data;
       setSessionId(session_id);
@@ -49,7 +56,7 @@ const SearchBar = () => {
 
       setQuery('');
       setIsFocused(false);
-      navigate('/search');
+      navigate('/search', { state: { query } });
     } catch (err) {
       console.error('SearchBar.js error:', {
         message: err.message,
@@ -64,16 +71,18 @@ const SearchBar = () => {
       );
       setQuery('');
       setIsFocused(false);
-      navigate('/search');
+      navigate('/search', { state: { query } });
     } finally {
+      console.log('SearchBar.js: Finally block, setting loading to false');
       dispatch(setLoading(false));
-      setTimeout(() => setIsSubmitting(false), 1000); // reset after 1s
+      setTimeout(() => setIsSubmitting(false), 1000);
     }
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      console.log('SearchBar.js: Enter key pressed, triggering handleSearch');
       handleSearch();
     }
   };
