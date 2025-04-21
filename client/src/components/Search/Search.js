@@ -8,6 +8,7 @@ import remarkGfm from 'remark-gfm';
 import prettier from 'prettier/standalone';
 import parserBabel from 'prettier/parser-babel';
 import parserHtml from 'prettier/parser-html';
+import Spinner from './Spinner';
 
 const formatCode = (code, language) => {
   try {
@@ -41,10 +42,12 @@ const formatCode = (code, language) => {
   }
 };
 
+
 const Search = () => {
-  const { queryHistory, loading } = useSelector((state) => state.data);
+  const { queryHistory } = useSelector((state) => state.data);
   const latestRef = useRef(null);
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const loading = useSelector((state) => state.data.loading);
 
   useEffect(() => {
     console.log('Search.js: loading state:', loading, 'queryHistory length:', queryHistory.length); // Debug: Log state
@@ -162,7 +165,7 @@ const Search = () => {
   return (
     <div className="search-page">
       <div className="search-content">
-        {loading && <p className="status-message">Loading...</p>}
+        {loading && <Spinner />}
         {queryHistory.length > 0 ? (
           queryHistory.map((entry, index) => {
             const assistantMessages = entry.results.filter(msg => msg.role === 'assistant');

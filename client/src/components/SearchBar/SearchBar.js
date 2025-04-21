@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import { setLoading, setResults, setError } from '../../redux/store';
@@ -11,12 +11,14 @@ const SearchBar = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSearch = async () => {
-    if (!query.trim()) return;
+    if (!query.trim() || isSubmitting) return;
 
+    setIsSubmitting(true); // block further submits
     dispatch(setLoading(true));
 
     const newMessage = { role: 'user', content: query, data: [] };
@@ -29,7 +31,7 @@ const SearchBar = () => {
           messages: [...messages, newMessage],
         },
         {
-          headers: { 'Accept': 'application/json' },
+          headers: { Accept: 'application/json' },
           withCredentials: true,
         }
       );
@@ -41,7 +43,7 @@ const SearchBar = () => {
       dispatch(
         setResults({
           query,
-          results: responseMessages, // Store full messages array
+          results: responseMessages,
         })
       );
 
@@ -65,6 +67,14 @@ const SearchBar = () => {
       navigate('/search');
     } finally {
       dispatch(setLoading(false));
+      setTimeout(() => setIsSubmitting(false), 1000); // reset after 1s
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
     }
   };
 
@@ -74,7 +84,7 @@ const SearchBar = () => {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+        onKeyDown={handleKeyDown}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder="Ask a question (e.g., 'sales, products, users')"
