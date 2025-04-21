@@ -23,20 +23,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # Node.js Backend Server
-  server:
-    build: ./server
-    ports:
-      - "5500:5500"
-    env_file:
-      - ./server/.env
-    volumes:
-      - ./server:/app
-    depends_on:
-      - db
-    networks:
-      - app_network
-
   # React Frontend Client with Nginx
   client:
     build: ./client

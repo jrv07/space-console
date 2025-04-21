@@ -9,8 +9,6 @@ gpt_client = OpenAI(api_key=OpenAI.api_key)
 
 def get_chat_response(history: dict[ChatMessage]) -> str:
     # Extract role and content from the ChatMessage objects
-    logger.debug(history)
-
 
     # Make the API call with the correct format
     response = gpt_client.chat.completions.create(
