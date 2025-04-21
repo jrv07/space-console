@@ -3,6 +3,7 @@ from chat.chat_service import generate_response
 from auth.dependencies import get_current_user
 from schemas.chat import ChatMessage, ChatRequest, ChatResponse
 import uuid
+from logger import logger
 router = APIRouter()
 data_dummy=[
   {
@@ -2305,17 +2306,10 @@ async def chat_handler(req: ChatRequest,user=Depends(get_current_user)):
     last_user_msg = next((msg for msg in reversed(messages) if msg.role == "user"), None)
     if not last_user_msg:
         raise HTTPException(status_code=400, detail="No user message found")
+    # Create a new list with only 'role' and 'content'
+    chatgpt_messages = [{"role": message.role, "content": message.content} for message in messages]
 
-
-
-    reply = [ChatMessage(role="assistant", content=generate_response(last_user_msg), data=data_dummy)]
-
-    # Dummy response logic
-    #if "sales" in last_user_msg.content.lower():
-    #        ChatMessage(role="assistant", content="Here is the sales of 2024 for your data:: ```SELECT * FROM SALES```",data=data_dummy),
-    #    ]
-    #else:
-    #    reply = [ChatMessage(role="assistant", content="Can you clarify your request?")]
+    reply = [ChatMessage(role="assistant", content=generate_response(chatgpt_messages), data=data_dummy)]
 
     full_convo = messages + reply
     chat_history_store[session_id] = full_convo
