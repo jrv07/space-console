@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import { setLoading, setResults, setError } from '../../redux/store';
@@ -11,17 +11,22 @@ const SearchBar = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [sessionId, setSessionId] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSearch = async () => {
-    if (!query.trim()) return;
+    if (!query.trim() || isSubmitting) return;
 
+    setIsSubmitting(true);
     dispatch(setLoading(true));
+    console.log('SearchBar.js: handleSearch triggered, query:', query);
 
     const newMessage = { role: 'user', content: query, data: [] };
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
       const response = await axiosInstance.post(
         `${FASTAPI_BASE_URL}/api/chat`,
         {
@@ -29,10 +34,14 @@ const SearchBar = () => {
           messages: [...messages, newMessage],
         },
         {
-          headers: { 'Accept': 'application/json' },
+          headers: { Accept: 'application/json' },
           withCredentials: true,
+          signal: controller.signal,
         }
       );
+      clearTimeout(timeoutId);
+
+      console.log('SearchBar.js: Server response received:', response.data);
 
       const { session_id, messages: responseMessages } = response.data;
       setSessionId(session_id);
@@ -41,13 +50,13 @@ const SearchBar = () => {
       dispatch(
         setResults({
           query,
-          results: responseMessages, // Store full messages array
+          results: responseMessages,
         })
       );
 
       setQuery('');
       setIsFocused(false);
-      navigate('/search');
+      navigate('/search', { state: { query } });
     } catch (err) {
       console.error('SearchBar.js error:', {
         message: err.message,
@@ -62,9 +71,19 @@ const SearchBar = () => {
       );
       setQuery('');
       setIsFocused(false);
-      navigate('/search');
+      navigate('/search', { state: { query } });
     } finally {
+      console.log('SearchBar.js: Finally block, setting loading to false');
       dispatch(setLoading(false));
+      setTimeout(() => setIsSubmitting(false), 1000);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      console.log('SearchBar.js: Enter key pressed, triggering handleSearch');
+      handleSearch();
     }
   };
 
@@ -74,7 +93,7 @@ const SearchBar = () => {
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+        onKeyDown={handleKeyDown}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder="Ask a question (e.g., 'sales, products, users')"
