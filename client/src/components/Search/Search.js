@@ -9,7 +9,6 @@ import remarkGfm from 'remark-gfm';
 import prettier from 'prettier/standalone';
 import parserBabel from 'prettier/parser-babel';
 import parserHtml from 'prettier/parser-html';
-import Spinner from './Spinner';
 
 const formatCode = (code, language) => {
   try {
@@ -176,7 +175,6 @@ const Search = () => {
   return (
     <div className="search-page">
       <div className="search-content">
-        {loading ? <Spinner /> : null}
         {queryHistory.length > 0 ? (
           queryHistory.map((entry, index) => {
             const assistantMessages = entry.results.filter((msg) => msg.role === 'assistant');
